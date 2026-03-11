@@ -1,0 +1,71 @@
+#ifndef MPU_EKF
+#define MPU_EKF
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "stm32f4xx_hal.h"  // Change this to "stm32f4xx.h" if you don't use HAL elsewhere
+#include <stdint.h>
+#include "math.h" 
+#include "arm_math.h"
+
+typedef struct
+{   
+    I2C_HandleTypeDef *I2Cx;
+
+    /* Flag to indicate the data is being currently read by DMA*/
+    volatile uint8_t rxFlag;
+    volatile uint8_t dataReadyFlag;
+
+
+    uint8_t rxData[14];  // 14-byte array to store imu receive data.
+    // Raw values
+    float raw_acc_mps2[3];
+    float raw_gyr_rps[3];
+    float acc_bias[3];
+    float Matrix_A[3][3];
+    float gyr_bias[3];
+
+    // Calibrated values
+    // Acceleration in m/s2
+    float acc_mps2[3];
+    // Gyroscope in rad/s
+    float gyr_rps[3];
+
+
+} mpu_struct;
+
+
+// Handle MPU
+uint8_t mpu_init(mpu_struct *mpu);
+void mpu_get_data(mpu_struct *mpu);
+void mpu_process_data( mpu_struct *mpu);
+
+typedef struct
+{
+    mpu_struct * mpu;
+    float32_t angles_rad[3]; // roll, pitch, yaw  => The input is in degree form
+    float32_t angles_deg[3]; // roll, pitch, yaw
+
+    // EKF 
+    float32_t Q_data[9]; // Must decleare as follows in order to input the arm math matrix.
+    float32_t R_data[9];
+
+    // float32_t init_angles[3]; // roll, pitch, yaw   -> Initializing angles as {0,0,0} is enough.
+    float32_t init_P[9];
+    float32_t dt;   // match with interrupt period (s)
+    float outlier;
+
+    uint8_t is_initialised;
+} mpu_ekf_t;
+
+void mpu_ekf_init(mpu_ekf_t    *ekf);   
+void mpu_ekf_process(mpu_ekf_t *ekf);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* FLASH_H */
