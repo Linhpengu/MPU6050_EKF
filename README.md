@@ -14,4 +14,3 @@ How it works ?
 Result: No drifting angles + MPU react quickly to the changes of rotation.
 
 <video src="/workspaces/MPU6050_EKF/mpu_ekf.mp4" controls width="100%"></video>
-<video src="/workspaces/MPU6050_EKF/mpu_ekf.mp4"c ontrols controlsList="nodownload" width="100%"></video>
