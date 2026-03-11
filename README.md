@@ -13,6 +13,6 @@ Extended Kalman Filter Implementation for MPU6050.
     - Whenever MPU data is ready, the INT pin will trigger the external interrupt of the STM32. Inside the interrupt handler, call the mpu_get_data(*ekf) function. Because of the DMA configuration for I2C, the process will run simultaneously with the MCU of stm32.
     - When the MPU receives data from the MPU, using the void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c) {} to process the data. Inside the interrupt, call mpu_process_data(*mpu) and mpu_ekf_process(* ekf) to process MPU data and run the EKF.
 
-## Result: No drifting angles + MPU reacts quickly to the changes of rotation.
+## Result: No drifting angles + quickly react to the changes of rotation.
 
 <video src="/workspaces/MPU6050_EKF/mpu_ekf.mp4" controls width="100%"></video>
